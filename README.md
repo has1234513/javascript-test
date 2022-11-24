@@ -3,4 +3,4 @@
 
 ### For test 1
 
-open Test1.html wit a brower
+open Test1.html with a brower
