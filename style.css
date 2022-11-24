@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  #searchText {
+    background-image: url('https://www.w3schools.com/css/searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+  }
+  
+  #searchTable {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 18px;
+  }
+  
+  #searchTable th, #searchTable td {
+    text-align: left;
+    padding: 12px;
+  }
+  
+  #searchTable tr {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  #searchTable tr.header, #searchTable tr:hover {
+    background-color: #f1f1f1;
+  }
