@@ -20,11 +20,11 @@ $(document).ready(function(){
 
     $("#searchText").keyup(function(){
 
-        _this = this;
-
-        const text = $(_this).val()
+        const text = $(this).val()
 
         let newCustomerArray = []
+
+        // hides all table elements
 
         $.each($("#searchTable tr"), function() {
             if($(this).text().toLowerCase().indexOf(text.toLowerCase()) === -1){
@@ -32,11 +32,15 @@ $(document).ready(function(){
             }
         });
 
+        //check ad filter for names
+
         customers.forEach( c => {
             if ( c.name.toLocaleLowerCase().includes(text.toLowerCase()) ) {
                 newCustomerArray.push(c)
             }
         })
+
+        //check and filter for age group
 
         if (text.includes('-') && parseInt(text.split("-")[0]) !== NaN && parseInt(text.split("-")[1]) !== NaN ) {
 
@@ -47,6 +51,8 @@ $(document).ready(function(){
             })
         }
 
+        //re add elements
+        
         for (var i=0; i<newCustomerArray.length; i++) {
             $('#searchTable').append(   
             '<tr>' +
