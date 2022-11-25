@@ -3,7 +3,7 @@
 
 ## For test 1
 
-open Test1.html with a brower
+open file `Test1.html` with a brower
 
 ## For test  2
 
