@@ -1,11 +1,11 @@
 # javascript-test
 
 
-### For test 1
+## For test 1
 
 open Test1.html with a brower
 
-### For test  2
+## For test  2
 
 Open a terminal to the location of the repo
 
