@@ -3,7 +3,7 @@
     <div class="page">
         <Navigation/>
         <div class="container">  
-            <form id="contact" action="" method="post">
+            <form id="contact">
                 <h3>elemental Contact Form</h3>
                 <h4>Please fill the fields below</h4>
                 <fieldset>
@@ -16,7 +16,7 @@
                     <input v-model="contact.number" placeholder="Valid SA Phone Number " type="tel" tabindex="3" required>
                 </fieldset>
                 <fieldset>
-                    <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
+                    <button @click="send" name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
                 </fieldset>
             </form>
         </div>
@@ -49,7 +49,7 @@ export default {
     },
 
     methods: {
-        fSend() {
+        send() {
             const axios = require('axios');
             const data = JSON.stringify(this.contact);
 
@@ -64,7 +64,7 @@ export default {
 
             axios(config)
             .then(function (response) {
-                console.log(JSON.stringify(response.data));
+                console.log(response.data);
             })
             .catch(function (error) {
                 console.log(error);
@@ -79,11 +79,11 @@ export default {
 <style scoped>
 
     .container {
-  max-width: 400px;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-}
+        max-width: 400px;
+        width: 100%;
+        margin: 0 auto;
+        position: relative;
+    }
 
 #contact input[type="text"],
 #contact input[type="email"],

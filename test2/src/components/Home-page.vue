@@ -78,8 +78,8 @@ export default {
 
 <style scoped>
 
-   .accodions:first-child {
-    margin: 10% 0 0 0;
+   .accodions {
+        margin: 10% 0 0 0;
    }
 
     .accordion {
