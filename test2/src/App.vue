@@ -7,6 +7,10 @@
 export default {
   name: 'App',
 
+  mounted() {
+    this.$router.push('/home')
+  }
+
 }
 </script>
 
@@ -17,11 +21,12 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  overflow: hidden;
 }
 
 .page{
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 }
 </style>
