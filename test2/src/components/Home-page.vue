@@ -2,14 +2,24 @@
 
     <div class="page">
         <Navigation/>
-        <div class="accodions">
-             <h2 class >Accordion</h2>
 
-            <button class="accordion">Section 1</button>
-            <div class="panel">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <h2 class="accodions" >Accordion</h2>
+
+        <div class="list">
+            <div class="" v-for="cat in categoriesOrdered" :key="cat.id">
+             
+
+            <button :style="{
+                border: openAccs.includes(cat.id) ? '1px solid green' : ''
+            }" class="accordion" @click="openAcc(cat)">{{cat.cat}}</button>
+            <div v-if="openAccs.includes(cat.id)" class="panel">
+                <h4>{{cat.title}}</h4>
+                <div v-html="cat.description"> </div>
+                <button class="like-button">{{cat.like}} like{{parseInt(cat.likes) !== 1 ? 's' : '' }}</button>
             </div>
         </div>
+        </div>
+        
        
 
     </div>
@@ -32,26 +42,23 @@ export default {
 
     data() {
         return {
-            categories: []
+            categories: null,
+            openAccs: []
+        }
+    },
+
+    computed: {
+        categoriesOrdered () {
+            // eslint-disable-next-line
+            const order = this.categories?.sort((a,b) => {
+                return a.cat.localeCompare(b.cat)
+            }) 
+            return order
         }
     },
 
     mounted () {
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                panel.style.display = "none";
-                } else {
-                panel.style.display = "block";
-                }
-            });
-        }
-
+  
         this.fetchCategories()
     },
 
@@ -71,6 +78,14 @@ export default {
             .catch((error) => {
                 console.log(error);
             });
+        },
+
+        openAcc(cat) {
+            if (this.openAccs.includes(cat.id)) {
+                this.openAccs = this.openAccs.filter(c => c !== cat.id)
+            } else {
+                this.openAccs.push(cat.id)
+            }
         }
     }
 }
@@ -80,6 +95,17 @@ export default {
 
    .accodions {
         margin: 10% 0 0 0;
+   }
+
+   .list {
+    overflow-y: auto;
+    height: 70vh;
+    width: 70vw;
+    margin: auto 
+   }
+   
+   .like-button{
+        margin: 2% 0
    }
 
     .accordion {
@@ -104,6 +130,8 @@ export default {
         display: none;
         background-color: white;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
         background-color: rgb(133, 155, 148);
     }
 
