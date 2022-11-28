@@ -3,22 +3,33 @@
     <div class="page">
         <Navigation/>
         <div class="container">  
-            <form id="contact">
+            <div v-if="!completed" id="contact">
                 <h3>elemental Contact Form</h3>
                 <h4>Please fill the fields below</h4>
-                <fieldset>
-                    <input v-model="contact.name" placeholder="Name" type="text" tabindex="1" required autofocus>
+                <fieldset >
+                    <input :style="{ border: nameError != null ? '1px solid red' : ''}" v-model="contact.name" placeholder="Name" type="text" tabindex="1" required autofocus>
                 </fieldset>
-                <fieldset>
-                    <input v-model="contact.email" placeholder="Valid Email Address" type="email" tabindex="2" required>
+                <p class="error-mgs"> {{nameError}} </p>
+                <fieldset >
+                    <input :style="{ border: emailError != null ? '1px solid red' : '' }" v-model="contact.email" placeholder="Valid Email Address" type="email" tabindex="2" required>
                 </fieldset>
-                <fieldset>
-                    <input v-model="contact.number" placeholder="Valid SA Phone Number " type="tel" tabindex="3" required>
+                <p class="error-mgs"> {{emailError}} </p>
+                <fieldset >
+                    <input :style="{ border: numError != null ? '1px solid red' : '' }" v-model="contact.number" placeholder="Valid SA Phone Number e.g(+27734567890)" type="tel" tabindex="3" required>
                 </fieldset>
+                <p class="error-mgs"> {{numError}} </p>
                 <fieldset>
                     <button @click="send" name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
                 </fieldset>
-            </form>
+
+                <p class="error-mgs" v-if="emptyError" > {{emptyError}} </p>
+            </div>
+
+            <div v-else id="conact-success">
+                <h1 class=""> 
+                  Contacts sent successfully
+                </h1>
+            </div>
         </div>
     </div>
   
@@ -36,7 +47,12 @@ export default {
                 name: '',
                 email:'',
                 number:''
-            }
+            },
+            nameError: null,
+            emailError: null,
+            numError: null,
+            emptyError: null,
+            completed: false
         }
     }, 
 
@@ -49,28 +65,88 @@ export default {
     },
 
     methods: {
-        send() {
-            const axios = require('axios');
-            const data = JSON.stringify(this.contact);
 
-            const config = {
-                method: 'post',
-                url: 'http://dev3.elemental.co.za/elemental-cms/front_end/contact_form_test',
-                headers: { 
-                    'Content-Type': 'text/plain', 
-                },  
-                data : data
-            };
+      validateEmail(email) {
+        const re =
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+      },
 
-            axios(config)
-            .then(function (response) {
-                console.log(response.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+      validateNumber(num) {
+        const re = /^(\+27|0)[6-8][0-9]{8}$/
+        return re.test(num)
+      },
 
+      runChecks(){
+        let passed = true
+
+        if (/^[a-zA-Z]+$/.test(this.contact.name) === false) {
+          this.nameError = "Name needs to contain letters only"
+          passed = false
         }
+
+        if (!this.validateEmail(this.contact.email)) {
+          this.emailError = "Please ensure proper email format"
+          passed = false
+        }
+
+        if (!this.validateNumber(this.contact.number)) {
+          this.numError = "Please ensure proper SA number format: (+27734567890)"
+          passed = false
+        }
+        return passed
+      }, 
+
+
+      async runAPI (){
+        const axios = require('axios');
+        const data = JSON.stringify(this.contact);
+
+        const config = {
+            method: 'post',
+            url: 'http://dev3.elemental.co.za/elemental-cms/front_end/contact_form_test',
+            headers: { 
+                'Content-Type': 'text/plain', 
+            },  
+            data : data
+        };
+
+        await axios(config)
+        .then( (response) => {
+            
+            console.log(response.data);
+        })
+        .catch( (error) => {
+            console.error(error);
+        });
+      },
+
+      async send() {
+
+        this.nameError = null,
+        this.emailError = null,
+        this.emptyError= null,
+        this.numError = null
+
+        if (this.contact.name === '' ||
+                this.contact.email === '',
+                this.contact.number === '') {
+          this.emptyError = 'please complete all fileds'  
+        } else if (this.runChecks()) {
+            try {
+              await this.runAPI()
+              this.completed = true
+              this.nameError = null;
+              this.emailError = null;
+              this.numError = null;
+              this.emptyError= null;
+            } catch (e) {
+              console.error(e)
+            }
+
+          }
+        
+      }
     }
 
 }
@@ -78,11 +154,21 @@ export default {
 
 <style scoped>
 
+  .error-mgs {
+    font-size: 13px;
+    color: red;
+  }
+
     .container {
         max-width: 400px;
         width: 100%;
         margin: 0 auto;
         position: relative;
+        display: flex;
+    }
+
+    #conact-success{
+      margin: 30% auto;
     }
 
 #contact input[type="text"],
